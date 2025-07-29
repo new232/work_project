@@ -1,0 +1,155 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>음성주문 UI</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+            padding-bottom: 70px;
+            text-align: center;
+        }
+        .header {
+            background-color: #f50057;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 16px 0;
+        }
+        .mic-container {
+            margin: 40px auto 20px;
+            cursor: pointer;
+        }
+        .mic-circle {
+            width: 160px;
+            height: 160px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        .mic-circle.listening {
+            background-color: #ffcccb;
+        }
+        .mic-circle img {
+            width: 80px;
+            height: 80px;
+        }
+        .instruction {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .result {
+            font-size: 20px;
+            color: #333;
+            margin: 20px 0;
+        }
+        .test-button {
+            margin-top: 10px;
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background-color: #1976D2;
+        }
+        .footer-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f1f1f1;
+            padding: 12px 0;
+            font-size: 18px;
+            color: #444;
+            font-weight: bold;
+            border-top: 1px solid #ccc;
+            text-align: center;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+<div class="header">요기요 음성 주문</div>
+
+<div class="mic-container">
+    <div class="mic-circle" id="micCircle">
+        <img id="micIcon" src="https://img.icons8.com/ios-filled/100/000000/microphone.png" alt="마이크" />
+    </div>
+</div>
+
+<div class="instruction">클릭하고 말해주세요</div>
+<div class="result" id="resultText">🎤 인식된 말이 여기에 나옵니다</div>
+
+<button class="test-button" onclick="testOrder()">🧪 테스트 주문</button>
+
+<div class="footer-banner">📢 광고 환영</div>
+
+<script>
+    const micCircle = document.getElementById("micCircle");
+    const micIcon = document.getElementById("micIcon");
+    const resultText = document.getElementById("resultText");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = "ko-KR";
+    recognition.interimResults = false;
+
+    micCircle.addEventListener("click", () => {
+        micCircle.classList.add("listening");
+        micIcon.src = "https://img.icons8.com/ios-filled/100/fa314a/microphone.png";
+        resultText.textContent = "🎙️ 듣고 있어요...";
+        recognition.start();
+    });
+
+    recognition.onresult = async (event) => {
+        const speech = event.results[0][0].transcript;
+        resultText.textContent = "🗣️ " + speech;
+
+        try {
+            const res = await fetch("http://localhost:5003/api/nlp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: speech })
+            });
+
+            const data = await res.json();
+            const menu = data.parsed.menu;
+            const qty = data.parsed.qty;
+
+            window.location.href = `order-confirm.html?menu=${encodeURIComponent(menu)}&qty=${qty}`;
+        } catch (err) {
+            resultText.textContent = "❌ NLP 요청 실패";
+            console.error(err);
+        }
+    };
+
+    recognition.onerror = (e) => {
+        resultText.textContent = "⚠️ 오류: " + e.error;
+    };
+
+    recognition.onend = () => {
+        micCircle.classList.remove("listening");
+        micIcon.src = "https://img.icons8.com/ios-filled/100/000000/microphone.png";
+    };
+
+    function testOrder() {
+        const testMenu = "뿌링클";
+        const testQty = 2;
+        window.location.href = `order-confirm.html?menu=${encodeURIComponent(testMenu)}&qty=${testQty}`;
+    }
+</script>
+</body>
+</html>
