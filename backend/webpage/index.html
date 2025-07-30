@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>음성 주문 시스템</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 4vw; /* 화면 너비에 따라 크기 조절 */
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .icon {
+      width: 30vw;
+      max-width: 200px;
+      height: auto;
+      margin: 0 auto 30px;
+      display: block;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 1em 2em;
+      font-size: 1rem;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: darkred;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 6vw;
+      }
+
+      .icon {
+        width: 50vw;
+        max-width: 180px;
+      }
+
+      button {
+        font-size: 0.9rem;
+        padding: 0.8em 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>음성 주문 시스템</h1>
+  <img src="음성녹음.jpg" alt="음성 아이콘" class="icon">
+
+  <div class="button-container">
+    <button onclick="startRecording()">음성 시작</button>
+    <button onclick="stopRecording()">음성 종료</button>
+  </div>
+
+  <script>
+    function startRecording() {
+      alert("음성 녹음을 시작합니다.");
+    }
+
+    function stopRecording() {
+      alert("음성 녹음을 종료합니다.");
+    }
+  </script>
+</body>
+</html>
+
+
