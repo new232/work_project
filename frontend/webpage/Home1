@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>홈화면</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 480px;
+      margin: auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  background-color: green;        /* 배경색 빨간색 */
+  padding: 20px;                /* 안쪽 여백 */
+  border-radius: 12px;          /* 모서리 둥글게 (선택 사항) */
+  color: white;                 /* 텍스트 색상 */
+
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 60%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .categories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    .categories button {
+      padding: 10px 16px;
+      background-color: #eee;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .categories button:hover {
+      background-color: #ccc;
+    }
+
+    .voice-order {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .voice-order button {
+      background-color: green;
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .store-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .store-card {
+      padding: 16px;
+      border: 1px solid #ddd;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .store-card h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .store-card p {
+      margin: 6px 0 0;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 -->
+  <header>
+    <h3>114 리턴즈</h3>
+    <input type="text" placeholder="음식 또는 가게 검색" /><br>
+
+  </header>
+
+
+  <!-- 카테고리 -->
+  <div class="categories">
+    <button>치킨</button>
+    <button>피자</button>
+    <button>한식</button>
+    <button>중식</button>
+    <button>디저트</button>
+  </div><br>
+
+  <!-- 음성주문 버튼 -->
+  <div class="voice-order">
+    <button>🎤 음성으로 주문하기</button>
+  </div>
+
+  <!-- 추천 가게 -->
+  <section>
+<hr />
+    <h2>추천 가게</h2>
+    <div class="store-list">
+      <div class="store-card">
+        <h3>BHC</h3>
+        <p>치킨 전문점</p>
+      </div>
+      <div class="store-card">
+        <h3>파파존스피자</h3>
+        <p>피자 전문점</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
