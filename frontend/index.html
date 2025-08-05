@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>음성주문 UI</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+            padding-bottom: 100px;
+            text-align: center;
+        }
+        .header {
+            background-color: #f50057;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 16px 0;
+        }
+        .mic-container {
+            margin: 40px auto 20px;
+            cursor: pointer;
+        }
+        .mic-circle {
+            width: 160px;
+            height: 160px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        .mic-circle.listening {
+            background-color: #ffcccb;
+        }
+        .mic-circle img {
+            width: 80px;
+            height: 80px;
+        }
+        .instruction {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .result {
+            font-size: 20px;
+            color: #333;
+            margin: 20px 0;
+        }
+        .test-button {
+            margin-top: 10px;
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background-color: #1976D2;
+        }
+        .footer-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f1f1f1;
+            padding: 12px 0;
+            font-size: 18px;
+            color: #444;
+            font-weight: bold;
+            border-top: 1px solid #ccc;
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* 카드 스타일 */
+        #cardResult {
+            display: none;
+            margin-top: 30px;
+        }
+        #storeCard {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: left;
+            background-color: #fff;
+        }
+        #storeCard h2 {
+            margin-top: 0;
+        }
+        #storeCard p {
+            color: #888;
+            margin-bottom: 12px;
+        }
+        #storeCard ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="header">요기요 음성 주문</div>
+
+<div class="mic-container">
+    <div class="mic-circle" id="micCircle">
+        <img id="micIcon" src="https://img.icons8.com/ios-filled/100/000000/microphone.png" alt="마이크"/>
+    </div>
+</div>
+
+<div class="instruction">🎤 클릭하고 말해주세요</div>
+<div class="result" id="resultText">🗣️ 인식된 말이 여기에 나옵니다</div>
+
+<!-- ✅ 결과 카드 영역 -->
+<div id="cardResult">
+    <div id="storeCard">
+        <h2 id="storeName"></h2>
+        <p id="storeCategory"></p>
+        <ul id="storeMenu"></ul>
+    </div>
+</div>
+
+<button class="test-button" onclick="testOrder()">🧪 테스트 주문</button>
+
+<div class="footer-banner">📢 광고 환영</div>
+
+<script>
+    const micCircle = document.getElementById("micCircle");
+    const micIcon = document.getElementById("micIcon");
+    const resultText = document.getElementById("resultText");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = "ko-KR";
+    recognition.interimResults = true;
+
+    micCircle.addEventListener("click", () => {
+        micCircle.classList.add("listening");
+        micIcon.src = "https://img.icons8.com/ios-filled/100/fa314a/microphone.png";
+        resultText.textContent = "🎙️ 듣고 있어요...";
+        recognition.start();
+    });
+
+    recognition.onresult = (event) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            transcript += event.results[i][0].transcript;
+        }
+        resultText.textContent = "🗣️ " + transcript;
+
+        if (event.results[event.resultIndex].isFinal) {
+            fetch("http://localhost:5003/api/nlp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: transcript })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const storeInfo = data.result;
+                    if (storeInfo && storeInfo.name) {
+                        document.getElementById("storeName").textContent = storeInfo.name;
+                        document.getElementById("storeCategory").textContent = "📂 " + storeInfo.category;
+
+                        const menuList = document.getElementById("storeMenu");
+                        menuList.innerHTML = "";
+                        storeInfo.menu.forEach(item => {
+                            const li = document.createElement("li");
+                            li.textContent = item;
+                            menuList.appendChild(li);
+                        });
+
+                        document.getElementById("cardResult").style.display = "block";
+                        resultText.textContent = "✅ 추천 결과가 아래에 표시됩니다.";
+                    } else {
+                        resultText.textContent = "😕 관련 가게를 찾지 못했습니다.";
+                        document.getElementById("cardResult").style.display = "none";
+                    }
+                })
+                .catch(err => {
+                    resultText.textContent = "❌ NLP 요청 실패";
+                    console.error(err);
+                });
+        }
+    };
+
+    recognition.onerror = (e) => {
+        resultText.textContent = "⚠️ 오류: " + e.error;
+    };
+
+    recognition.onend = () => {
+        micCircle.classList.remove("listening");
+        micIcon.src = "https://img.icons8.com/ios-filled/100/000000/microphone.png";
+    };
+
+    function testOrder() {
+        const testText = "양념치킨";
+        fetch("http://localhost:5003/api/nlp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: testText })
+        })
+            .then(res => res.json())
+            .then(data => {
+                const storeInfo = data.result;
+                if (storeInfo && storeInfo.name) {
+                    document.getElementById("storeName").textContent = storeInfo.name;
+                    document.getElementById("storeCategory").textContent = "📂 " + storeInfo.category;
+
+                    const menuList = document.getElementById("storeMenu");
+                    menuList.innerHTML = "";
+                    storeInfo.menu.forEach(item => {
+                        const li = document.createElement("li");
+                        li.textContent = item;
+                        menuList.appendChild(li);
+                    });
+
+                    document.getElementById("cardResult").style.display = "block";
+                    resultText.textContent = "✅ 테스트 결과가 아래에 표시됩니다.";
+                } else {
+                    resultText.textContent = "😕 테스트 가게를 찾지 못했습니다.";
+                    document.getElementById("cardResult").style.display = "none";
+                }
+            });
+    }
+</script>
+</body>
+</html>
