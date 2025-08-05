@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>📍 GPS + 🎙️ 음성으로 전체 주소 입력</title>
+    <style>
+        body { font-family: sans-serif; padding: 30px; }
+        input { padding: 10px; width: 350px; margin-bottom: 10px; display: block; }
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        #getLocationBtn { background: #4caf50; color: white; }
+        #micBtn { background: #f50057; color: white; }
+    </style>
+</head>
+<body>
+
+<h2>📌 GPS + 음성 인식으로 전체 주소 입력</h2>
+
+<input type="text" id="roadAddress" placeholder="도로명 주소 (GPS)" readonly />
+<input type="text" id="detailAddress" placeholder="상세 주소 (음성 인식)" />
+<input type="text" id="fullAddress" placeholder="전체 주소 자동 구성" readonly />
+
+<button id="getLocationBtn">📍 현재 위치 주소</button>
+<button id="micBtn">🎙️ 상세 주소 말하기</button>
+
+<script>
+    const roadAddressInput = document.getElementById("roadAddress");
+    const detailAddressInput = document.getElementById("detailAddress");
+    const fullAddressInput = document.getElementById("fullAddress");
+
+    // 1. GPS → 도로명 주소 (Nominatim)
+    document.getElementById("getLocationBtn").onclick = () => {
+        if (!navigator.geolocation) {
+            alert("GPS를 지원하지 않는 브라우저입니다.");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+
+            console.log("🛰️ 위도:", lat, "경도:", lon);
+
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+                const data = await response.json();
+
+                const address = data.display_name;
+                if (address) {
+                    roadAddressInput.value = address;
+                    updateFullAddress();
+                    alert("✅ 도로명 주소 입력 완료!");
+                } else {
+                    alert("주소를 찾을 수 없습니다.");
+                }
+            } catch (err) {
+                alert("API 호출 실패: " + err.message);
+            }
+        }, (err) => {
+            alert("위치 정보 오류: " + err.message);
+        });
+    };
+
+    // 2. 음성 인식으로 상세 주소 입력
+    const micBtn = document.getElementById("micBtn");
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = "ko-KR";
+    recognition.interimResults = false;
+
+    micBtn.onclick = () => {
+        recognition.start();
+    };
+
+    recognition.onresult = (event) => {
+        const detail = event.results[0][0].transcript;
+        detailAddressInput.value = detail;
+        updateFullAddress();
+        alert(`🎤 인식된 상세 주소: ${detail}`);
+    };
+
+    recognition.onerror = (e) => {
+        alert("음성 인식 오류: " + e.error);
+    };
+
+    // 3. 전체 주소 업데이트
+    function updateFullAddress() {
+        const road = roadAddressInput.value.trim();
+        const detail = detailAddressInput.value.trim();
+        if (road || detail) {
+            fullAddressInput.value = `${road} ${detail}`.trim();
+        }
+    }
+</script>
+
+</body>
+</html>
