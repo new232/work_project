@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AddressConfirm = () => {
   const [roadAddress, setRoadAddress] = useState("");
@@ -6,6 +7,8 @@ const AddressConfirm = () => {
 
   const recognitionRef = useRef(null);
   const micIconRef = useRef(null);
+
+  const navigate = useNavigate(); // ✅ 네비게이트 훅 선언
 
   // 음성인식 초기화
   useEffect(() => {
@@ -75,12 +78,55 @@ const AddressConfirm = () => {
     }
   };
 
+  // ✅ 예 버튼 클릭 시 실행
+  const handleConfirm = () => {
+    const payload = {
+      roadAddress,
+      detailAddress,
+    };
+
+  /* // ✅ 주소 서버로 전송
+  const handleConfirm = async () => {
+    const payload = {
+      roadAddress,
+      detailAddress,
+    };
+
+   try {
+      const res = await fetch("http://localhost:8000/api/location", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert("주소가 서버에 성공적으로 전송되었습니다!");
+      } else {
+        alert("전송 실패. 다시 시도해주세요.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("서버와 연결할 수 없습니다.");
+    }
+  }; */
+
+  // ✅ 예 버튼 누르면 Basket으로 이동
+    navigate("/basket");
+};
+
+// ✅ 아니오 버튼 클릭 시 실행
+  const handleRetry = () => {
+    setDetailAddress("");
+  };
+
   return (
     <div
       style={{
         margin: 0,
         fontFamily: "'Noto Sans KR', sans-serif",
-        backgroundColor: "#cde5f9",
+        backgroundColor: "#ffffff",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -92,21 +138,27 @@ const AddressConfirm = () => {
       <div
         className="container"
         style={{
-          width: 375,
-          border: "1px solid #000",
-          padding: 23,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center",
-          margin: "0 auto",
-          height: "100%",
+          width: "375px",
+        height: "812px",
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "42px",
+        padding: "50px 23px",
+        textAlign: "center",
+        border: "1px solid #000",
+        boxSizing: "border-box",
+        position: "relative",
+        fontFamily: "'Noto Sans KR', sans-serif",
+        backgroundColor: "#CDE5F9",
         }}
       >
         <h2
           style={{
+          fontFamily: "'Noto Sans KR', sans-serif",
             fontSize: 26,
-            fontWeight: 500,
+            fontWeight: 400,
             marginBottom: 20,
             textAlign: "left",
             alignSelf: "flex-start",
@@ -125,6 +177,7 @@ const AddressConfirm = () => {
           <div
             className="input-box"
             style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
               position: "relative",
               display: "flex",
               alignItems: "center",
@@ -142,6 +195,7 @@ const AddressConfirm = () => {
             <span
               className="input-label"
               style={{
+                fontFamily: "'Noto Sans KR', sans-serif",
                 flexShrink: 0,
                 userSelect: "none",
                 color: "#0017C8",
@@ -160,6 +214,7 @@ const AddressConfirm = () => {
               readOnly
               value={roadAddress}
               style={{
+                fontFamily: "'Noto Sans KR', sans-serif",
                 flexGrow: 1,
                 border: "none",
                 outline: "none",
@@ -197,6 +252,7 @@ const AddressConfirm = () => {
           <div
             className="input-box"
             style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
               position: "relative",
               display: "flex",
               alignItems: "center",
@@ -232,6 +288,7 @@ const AddressConfirm = () => {
               value={detailAddress}
               onChange={(e) => setDetailAddress(e.target.value)}
               style={{
+                fontFamily: "'Noto Sans KR', sans-serif",
                 flexGrow: 1,
                 border: "none",
                 outline: "none",
@@ -265,7 +322,9 @@ const AddressConfirm = () => {
         <div className="buttons" style={{ display: "flex", gap: 20, marginTop: 20 }}>
           <button
             className="btn btn-yes"
+            onClick={handleConfirm}   // ✅ 예 버튼 클릭 시 실행
             style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
               width: 122,
               height: 76,
               flexShrink: 0,
@@ -273,18 +332,26 @@ const AddressConfirm = () => {
               border: "none",
               borderRadius: 8,
               fontSize: 30,
-              fontWeight: "bold",
+             
               color: "#fff",
               cursor: "pointer",
+              display: "flex",
+    flexDirection: "column",     // 세로로 쌓기
+    alignItems: "center",
+    justifyContent: "center",    // 중앙 정렬
+    gap: 4,
+    fontWeight: 400, 
             }}
           >
             예
-            <br />
-            <span style={{ fontSize: 17, fontWeight: 400 }}>주문 완료하기</span>
+            <br/>
+            <span style={{ fontSize: 17, fontWeight: 400}}>주문 완료하기</span>
           </button>
           <button
             className="btn btn-no"
+            onClick={handleRetry}   // ✅ 아니오 버튼 클릭 시 실행
             style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
               width: 122,
               height: 76,
               flexShrink: 0,
@@ -292,13 +359,19 @@ const AddressConfirm = () => {
               border: "none",
               borderRadius: 8,
               fontSize: 30,
-              fontWeight: "bold",
+              
               color: "#fff",
               cursor: "pointer",
+              display: "flex",
+    flexDirection: "column",     // 세로로 쌓기
+    alignItems: "center",
+    justifyContent: "center",    // 중앙 정렬
+    gap: 4,
+    fontWeight: 400,                     // 텍스트 사이 간격
             }}
           >
             아니오
-            <br />
+            <br/>
             <span style={{ fontSize: 17, fontWeight: 400 }}>다시 말하기</span>
           </button>
         </div>
@@ -312,3 +385,4 @@ const AddressConfirm = () => {
 };
 
 export default AddressConfirm;
+
