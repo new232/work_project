@@ -7,7 +7,7 @@ const Home = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/order"); // 3초 뒤 자동 이동
-    }, 3000);
+    }, 3000); 
 
     return () => clearTimeout(timer);
   }, [navigate]);
@@ -24,7 +24,7 @@ const Home = () => {
         backgroundColor: "#CDE5F9",
         minHeight: "100vh",
         boxSizing: "border-box",
-      }}
+      }} 
     >
       <div
         style={{
