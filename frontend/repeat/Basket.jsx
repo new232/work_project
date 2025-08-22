@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const OrderSummary = () => {
   const [orders, setOrders] = useState([]); // 주문 데이터 배열
   const [total, setTotal] = useState(0);   // 총 금액
+const navigate = useNavigate();  // ✅ 추가
+
+
+const handleNext = () => navigate("/location"); // 다음은 Basket
+  const handlePrev = () => navigate("/complete"); // 이전은 Order
 
   useEffect(() => {
     // 백엔드에서 주문 데이터 받아오기
@@ -173,18 +180,83 @@ const OrderSummary = () => {
         </div>
       </div>
 
+ <div className="buttons" style={{ display: "flex", gap: 20, marginTop: 20 }}>
+           <button
+            className="btn btn-no"
+            onClick={handleNext}   // ✅ 아니오 버튼 클릭 시 실행
+            style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
+              width: 122,
+              height: 76,
+              flexShrink: 0,
+              backgroundColor: "#00b32d",
+              border: "none",
+              borderRadius: 8,
+              fontSize: 30,
+              
+              color: "#fff",
+              cursor: "pointer",
+              display: "flex",
+    flexDirection: "column",     // 세로로 쌓기
+    alignItems: "center",
+    justifyContent: "center",    // 중앙 정렬
+    gap: 4,
+    fontWeight: 400,                     // 텍스트 사이 간격
+            }}
+          >
+            이전
+            <br/>
+            
+          </button>
+          
+          
+          
+          <button
+            className="btn btn-yes"
+            onClick={handlePrev}   // ✅ 예 버튼 클릭 시 실행
+            style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
+              width: 122,
+              height: 76,
+              flexShrink: 0,
+              backgroundColor: "#ff3b30",
+              border: "none",
+              borderRadius: 8,
+              fontSize: 30,
+             
+              color: "#fff",
+              cursor: "pointer",
+              display: "flex",
+    flexDirection: "column",     // 세로로 쌓기
+    alignItems: "center",
+    justifyContent: "center",    // 중앙 정렬
+    gap: 4,
+    fontWeight: 400, 
+            }}
+          >
+            다음
+            <br/>
+      
+          </button>
+
+
+         
+        </div>
+
+
       <img
-        src="call.svg"
-        alt="로고 이미지"
-        style={{
-          position: "absolute",
-          top: "670px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "36px",
-          height: "38px",
-        }}
-      />
+  src="call.svg"
+  alt="로고"
+  style={{
+    position: "absolute",
+    bottom: "40px", // ✅ 박스 안쪽에서 40px 띄우기
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "36px",   // 필요시 크기 고정
+    height: "38px",  // 필요시 크기 고정
+  }}
+/>
+
     </div>
   );
 };
