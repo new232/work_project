@@ -10,6 +10,9 @@ const AddressConfirm = () => {
 
   const navigate = useNavigate(); // ✅ 네비게이트 훅 선언
 
+const handleNext = () => navigate("/basket"); // 다음은 Basket
+  const handlePrev = () => navigate("/order"); // 이전은 Order
+
   // 음성인식 초기화
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -74,16 +77,11 @@ const AddressConfirm = () => {
 
   const startRecognition = () => {
     if (recognitionRef.current) {
+      setDetailAddress(""); // 🎤 새 입력 시작 전에 기존 값 지우기
       recognitionRef.current.start();
     }
   };
 
-  // ✅ 예 버튼 클릭 시 실행
-  const handleConfirm = () => {
-    const payload = {
-      roadAddress,
-      detailAddress,
-    };
 
   /* // ✅ 주소 서버로 전송
   const handleConfirm = async () => {
@@ -112,14 +110,7 @@ const AddressConfirm = () => {
     }
   }; */
 
-  // ✅ 예 버튼 누르면 Basket으로 이동
-    navigate("/basket");
-};
 
-// ✅ 아니오 버튼 클릭 시 실행
-  const handleRetry = () => {
-    setDetailAddress("");
-  };
 
   return (
     <div
@@ -320,42 +311,16 @@ const AddressConfirm = () => {
         </div>
 
         <div className="buttons" style={{ display: "flex", gap: 20, marginTop: 20 }}>
-          <button
-            className="btn btn-yes"
-            onClick={handleConfirm}   // ✅ 예 버튼 클릭 시 실행
+
+ <button
+            className="btn btn-no"
+            onClick={handlePrev}   // ✅ 아니오 버튼 클릭 시 실행
             style={{
               fontFamily: "'Noto Sans KR', sans-serif",
               width: 122,
               height: 76,
               flexShrink: 0,
               backgroundColor: "#00b32d",
-              border: "none",
-              borderRadius: 8,
-              fontSize: 30,
-             
-              color: "#fff",
-              cursor: "pointer",
-              display: "flex",
-    flexDirection: "column",     // 세로로 쌓기
-    alignItems: "center",
-    justifyContent: "center",    // 중앙 정렬
-    gap: 4,
-    fontWeight: 400, 
-            }}
-          >
-            예
-            <br/>
-            <span style={{ fontSize: 17, fontWeight: 400}}>주문 완료하기</span>
-          </button>
-          <button
-            className="btn btn-no"
-            onClick={handleRetry}   // ✅ 아니오 버튼 클릭 시 실행
-            style={{
-              fontFamily: "'Noto Sans KR', sans-serif",
-              width: 122,
-              height: 76,
-              flexShrink: 0,
-              backgroundColor: "#ff3b30",
               border: "none",
               borderRadius: 8,
               fontSize: 30,
@@ -370,15 +335,55 @@ const AddressConfirm = () => {
     fontWeight: 400,                     // 텍스트 사이 간격
             }}
           >
-            아니오
+            이전
             <br/>
-            <span style={{ fontSize: 17, fontWeight: 400 }}>다시 말하기</span>
+           
           </button>
+
+          <button
+            className="btn btn-yes"
+            onClick={handleNext}   // ✅ 예 버튼 클릭 시 실행
+            style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
+              width: 122,
+              height: 76,
+              flexShrink: 0,
+              backgroundColor: "#ff3b30",
+              border: "none",
+              borderRadius: 8,
+              fontSize: 30,
+             
+              color: "#fff",
+              cursor: "pointer",
+              display: "flex",
+    flexDirection: "column",     // 세로로 쌓기
+    alignItems: "center",
+    justifyContent: "center",    // 중앙 정렬
+    gap: 4,
+    fontWeight: 400, 
+            }}
+          >
+            다음
+            <br/>
+            
+          </button>
+
+         
         </div>
 
-        <div className="mic-footer" style={{ marginTop: 40 }}>
-          <img src="call.svg" alt="전화 아이콘" style={{ width: 30, height: 30, opacity: 0.6 }} />
-        </div>
+        <img
+  src="call.svg"
+  alt="로고"
+  style={{
+    position: "absolute",
+    bottom: "40px", // ✅ 박스 안쪽에서 40px 띄우기
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "36px",   // 필요시 크기 고정
+    height: "38px",  // 필요시 크기 고정
+  }}
+/>
+
       </div>
     </div>
   );
