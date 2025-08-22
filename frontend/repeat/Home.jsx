@@ -21,7 +21,7 @@ const Home = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        backgroundColor: "#CDE5F9",
+        backgroundColor: "#ffffff",
         minHeight: "100vh",
         boxSizing: "border-box",
       }} 
