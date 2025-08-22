@@ -2,7 +2,7 @@ import React from "react";
 
 const Complete = ({ roadAddress, detailAddress }) => {
   return (
-    <div
+     <div
       style={{
         width: "375px",
         height: "812px",
@@ -22,8 +22,9 @@ const Complete = ({ roadAddress, detailAddress }) => {
     >
       <div
         style={{
-          color: "#000000",
-          fontFamily: "'Inter', sans-serif",
+          color: "#000",
+          
+          fontFamily: "'Noto Sans KR', sans-serif",
           fontWeight: 400,
           fontSize: 24,
           lineHeight: "31px",
@@ -163,17 +164,18 @@ const Complete = ({ roadAddress, detailAddress }) => {
       </div>
 
       <img
-        src="call.svg"
-        alt="로고 이미지"
-        style={{
-          position: "absolute",
-          top: "670px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "36px",
-          height: "38px",
-        }}
-      />
+  src="call.svg"
+  alt="로고"
+  style={{
+    position: "absolute",
+    bottom: "40px", // ✅ 박스 안쪽에서 40px 띄우기
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "36px",   // 필요시 크기 고정
+    height: "38px",  // 필요시 크기 고정
+  }}
+/>
+
     </div>
   );
 };
