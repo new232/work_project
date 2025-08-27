@@ -6,7 +6,7 @@ const Home = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/order"); // 3초 뒤 자동 이동
+      navigate("/location"); // 3초 뒤 자동 이동
     }, 3000); 
 
     return () => clearTimeout(timer);

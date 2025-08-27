@@ -9,7 +9,7 @@ const Basket = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handlePrev = () => navigate("/location"); // 이전 화면
+
   const handleNext = () => {
   navigate("/complete", {
     state: {
@@ -196,34 +196,7 @@ const Basket = () => {
       </div>
 
  <div className="buttons" style={{ display: "flex", gap: 20, marginTop: 20 }}>
-           <button
-            className="btn btn-no"
-            onClick={handlePrev}   // ✅ 아니오 버튼 클릭 시 실행
-            style={{
-              fontFamily: "'Noto Sans KR', sans-serif",
-              width: 122,
-              height: 76,
-              flexShrink: 0,
-              backgroundColor: "#00b32d",
-              border: "none",
-              borderRadius: 8,
-              fontSize: 30,
-              
-              color: "#fff",
-              cursor: "pointer",
-              display: "flex",
-    flexDirection: "column",     // 세로로 쌓기
-    alignItems: "center",
-    justifyContent: "center",    // 중앙 정렬
-    gap: 4,
-    fontWeight: 400,                     // 텍스트 사이 간격
-            }}
-          >
-            이전
-            <br/>
-            
-          </button>
-          
+           
           
           
           <button
@@ -231,10 +204,10 @@ const Basket = () => {
             onClick={handleNext}   // ✅ 예 버튼 클릭 시 실행
             style={{
               fontFamily: "'Noto Sans KR', sans-serif",
-              width: 122,
-              height: 76,
+              width: "335px",
+              height: "76px",
               flexShrink: 0,
-              backgroundColor: "#ff3b30",
+              backgroundColor: "#0017C8",
               border: "none",
               borderRadius: 8,
               fontSize: 30,
@@ -249,7 +222,7 @@ const Basket = () => {
     fontWeight: 400, 
             }}
           >
-            다음
+            결제하기
             <br/>
       
           </button>

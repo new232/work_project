@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-const AddressConfirm = () => {
+const Location = () => {
   const [roadAddress, setRoadAddress] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
-
   const recognitionRef = useRef(null);
   const micIconRef = useRef(null);
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // ✅ 네비게이트 훅 선언
+  const handleNext = () => {
+    // 주소를 order으로 전달
+    navigate("/order", {
+      state: {roadAddress, detailAddress}
+    });
+  };
+ 
 
-const handleNext = () => navigate("/basket"); // 다음은 Basket
-  const handlePrev = () => navigate("/order"); // 이전은 Order
-
+  
   // 음성인식 초기화
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -81,6 +85,11 @@ const handleNext = () => navigate("/basket"); // 다음은 Basket
       recognitionRef.current.start();
     }
   };
+
+// ✅ Location 컴포넌트가 렌더링되자마자 현재 위치 자동 가져오기
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
 
 
   /* // ✅ 주소 서버로 전송
@@ -314,18 +323,18 @@ const handleNext = () => navigate("/basket"); // 다음은 Basket
 
  <button
             className="btn btn-no"
-            onClick={handlePrev}   // ✅ 아니오 버튼 클릭 시 실행
+               // ✅ 아니오 버튼 클릭 시 실행
             style={{
               fontFamily: "'Noto Sans KR', sans-serif",
               width: 122,
               height: 76,
               flexShrink: 0,
-              backgroundColor: "#00b32d",
+              backgroundColor: "#CDE5F9",
               border: "none",
               borderRadius: 8,
               fontSize: 30,
               
-              color: "#fff",
+              color: "#CDE5F9",
               cursor: "pointer",
               display: "flex",
     flexDirection: "column",     // 세로로 쌓기
@@ -389,4 +398,4 @@ const handleNext = () => navigate("/basket"); // 다음은 Basket
   );
 };
 
-export default AddressConfirm;
+export default Location;

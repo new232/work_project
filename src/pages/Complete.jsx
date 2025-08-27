@@ -1,6 +1,8 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
+
+
 const Complete = () => {
   const location = useLocation();
   const { orders = [], roadAddress = "", detailAddress = "", totalPrice = 0 } = location.state || {};
