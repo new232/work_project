@@ -1,14 +1,13 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-
-
 const Complete = () => {
   const location = useLocation();
-  const { orders = [], roadAddress = "", detailAddress = "", totalPrice = 0 } = location.state || {};
 
-  const fullAddress = roadAddress + (detailAddress ? ` ${detailAddress}` : "");
-
+  
+// Basket에서 전달된 주문 정보와 주소
+  const { orders = [], totalPrice = 0, roadAddress = "", detailAddress = "" } = location.state || {};
+  
   return (
     <div
       style={{
@@ -212,7 +211,7 @@ const Complete = () => {
               justifyContent: "center",
             }}
           >
-            {fullAddress}
+         <p>{roadAddress} {detailAddress}</p>
         
           </div>
         </div>
