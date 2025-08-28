@@ -15,7 +15,14 @@ const Location = () => {
     });
   };
  
-
+ // 상세주소 변경 시 자동 TTS
+  useEffect(() => {
+    if (detailAddress) {
+      const utterance = new SpeechSynthesisUtterance(detailAddress);
+      utterance.lang = "ko-KR";
+      speechSynthesis.speak(utterance);
+    }
+  }, [detailAddress]);
   
   // 음성인식 초기화
   useEffect(() => {
