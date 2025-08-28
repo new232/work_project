@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Voicein from "../Voicein";
+
+
 
 const Order = () => {
   const [roadAddress, setRoadAddress] = useState("");
@@ -8,8 +10,20 @@ const Order = () => {
   const [voiceText, setVoiceText] = useState(""); // 음성 텍스트
   const [isListening, setIsListening] = useState(false);
 
+  
+const location = useLocation();
   const voiceRef = useRef();
   const navigate = useNavigate();
+
+
+   // Location에서 전달된 주소 가져오기
+    useEffect(() => {
+      if (location.state) {
+        setRoadAddress(location.state.roadAddress || "");
+        setDetailAddress(location.state.detailAddress || "");
+      }
+    }, [location.state]);
+  
 
   // TTS 실행 함수
   const speak = (text) => {
