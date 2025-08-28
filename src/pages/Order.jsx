@@ -40,6 +40,26 @@ const Order = () => {
     console.log("받은 텍스트:", text);
   };
 
+// 백엔드로 전송
+   fetch("http://localhost:5000/api/voice", { // 백엔드 주소 변경 필요//
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message: text }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("서버 응답:", data);
+      })
+      .catch((error) => {
+        console.error("전송 실패:", error);
+      });
+  };
+
+
+
+  
   const handleListeningChange = (listening) => {
     setIsListening(listening);
   };
